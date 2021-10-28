@@ -517,8 +517,8 @@ def get_daemon_configuration_content(daemon_name, omsagent_incoming_port):
 
 
 def get_rsyslog_daemon_configuration_content(omsagent_incoming_port):
-    '''Rsyslog accept every message containing CEF or ASA(for Cisco ASA'''
-    rsyslog_daemon_configuration_content = "if $rawmsg contains \"CEF:\" or $rawmsg contains \"ASA-\"" \
+    '''Rsyslog accept every message containing CEF or ASA/FTD(for Cisco ASA/FTD'''
+    rsyslog_daemon_configuration_content = "if $rawmsg contains \"CEF:\" or $rawmsg contains \"ASA-\" or $rawmsg contains \"FTD-\"" \
                                            " then @@127.0.0.1:"+ omsagent_incoming_port
     print("Rsyslog daemon configuration content:")
     content = rsyslog_daemon_configuration_content
@@ -528,7 +528,7 @@ def get_rsyslog_daemon_configuration_content(omsagent_incoming_port):
 
 def get_syslog_ng_damon_configuration_content(omsagent_incoming_port):
     # we can sepcify the part searched with MESSAGE or MSGHDR (for the header) "filter f_oms_filter {match(\"CEF\" value(\"MESSAGE\"));};\n"
-    oms_filter = "filter f_oms_filter {match(\"CEF\|ASA\" ) ;};"
+    oms_filter = "filter f_oms_filter {match(\"CEF\|ASA\|FTD\" ) ;};"
     oms_destination = "destination oms_destination {tcp(\"127.0.0.1\" port(" + omsagent_incoming_port + "));};\n"
     log = "log {source(s_src);filter(f_oms_filter);destination(oms_destination);};\n"
     content = oms_filter + oms_destination + log
