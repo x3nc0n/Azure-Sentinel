@@ -116,9 +116,8 @@ class AzureBlobStorageConnector:
             logging.info("inside get_blobs function")
             async with container_client:
                 async for blob in container_client.list_blobs():
-                    if 'ownership-challenge' not in blob['name']:
-                        if blob.access_tier != 'Archive':
-                            yield blob
+                    if 'ownership-challenge' not in blob['name'] and blob['properties']['archive_status'] != 'archived':
+                        yield blob
         except Exception as ex:
             logging.error(f'An error occurred in get_blobs: {ex}')
             logging.error(traceback.format_exc())
